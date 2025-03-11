@@ -2,23 +2,33 @@ import { useState } from "react";
 
 const PromptBox = () => {
   const [prompt, setPrompt] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const generateImage = async () => {
+    setLoading(true);
+    const response = await fetch(
+      `http://127.0.0.1:8000/generate?prompt=${prompt}+nail+art`
+    );
+    const blob = await response.blob();
+    setImage(URL.createObjectURL(blob));
+    setLoading(false);
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center flex-1 gap-[0.5rem] h-full max-w-[32rem] min-w-[32rem] max-h-[64rem]">
-      <div className="flex justify-between p-2 rounded-[32px] border border-white/15 bg-[rgba(27,27,27,0.75)] w-full">
-        헤더
-        <button>전환</button>
-      </div>
-      <div className="flex flex-col rounded-[32px] border border-white/15 bg-[rgba(27,27,27,0.75)] w-full flex-[2.5_1_0%]">
-        <input
-          className="h-full"
-          type="text"
-          placeholder="이미지 설명을 입력하세요..."
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-        />
-        <button>만들기</button>
-      </div>
+    <div className="relative max-w-3xl w-full bg-[#2D2D2D] rounded-3xl border border-white/15 p-3 flex items-center gap-3">
+      <div
+        contentEditable
+        className="flex-1 bg-transparent border-none outline-none text-white p-2 min-h-28"
+        onInput={(e) => setPrompt(e.currentTarget.textContent || "")}
+      ></div>
+      <button
+        onClick={generateImage}
+        disabled={loading}
+        className="absolute flex items-center justify-center bottom-3 right-3 bg-[#6d6aff] text-white px-4 py-2 rounded-4xl hover:bg-[#5a5ae8]"
+      >
+        {loading ? "생성 중 ... " : "✨ 만들기"}
+        <p>✨ 만들기</p>
+      </button>
     </div>
   );
 };
