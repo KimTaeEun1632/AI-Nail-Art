@@ -60,6 +60,11 @@ const index = () => {
             className="flex-1 bg-transparent border-none outline-none text-white p-2 min-h-28"
             onInput={(e) => setPrompt(e.currentTarget.textContent || "")}
           ></div>
+          <label class="absolute top-10 right-3 inline-flex items-center cursor-pointer">
+            <input type="checkbox" value="" class="sr-only peer" />
+            <div class="relative w-14 h-7 bg-[#3E3E3E] rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-0.5 after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-[#6d6aff]"></div>
+          </label>
+
           <button
             disabled={loading}
             className="absolute flex items-center justify-center bottom-3 right-3 bg-[#6d6aff] text-white px-4 py-2 rounded-4xl hover:bg-[#5a5ae8]"
