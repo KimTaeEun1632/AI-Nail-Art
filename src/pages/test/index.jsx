@@ -4,22 +4,34 @@ import ShowImageBox from "@/components/CreatePage/ShowImageBox";
 import Image from "next/image";
 import React, { useState } from "react";
 
+import img1 from "@/assets/images/test1.jpg";
+import img2 from "@/assets/images/test2.jpg";
+import img3 from "@/assets/images/test3.jpg";
+import img4 from "@/assets/images/test4.jpg";
+
+const images = [
+  { id: 1, src: img1, alt: "이미지1" },
+  { id: 2, src: img2, alt: "이미지2" },
+  { id: 3, src: img3, alt: "이미지3" },
+  { id: 4, src: img4, alt: "이미지4" },
+];
+
 const index = () => {
   const [prompt, setPrompt] = useState("");
-  const [images, setImages] = useState([]);
+  // const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
 
   console.log(prompt);
 
-  const generateImage = async () => {
-    setLoading(true);
-    const response = await fetch(
-      `http://127.0.0.1:8000/generate?prompt=${prompt}+nail+art&num_images=4`
-    );
-    const blob = await response.blob();
-    setImages(URL.createObjectURL(blob));
-    setLoading(false);
-  };
+  // const generateImage = async () => {
+  //   setLoading(true);
+  //   const response = await fetch(
+  //     `http://127.0.0.1:8000/generate?prompt=${prompt}+nail+art&num_images=4`
+  //   );
+  //   const blob = await response.blob();
+  //   setImages(URL.createObjectURL(blob));
+  //   setLoading(false);
+  // };
 
   return (
     <div className="flex h-full w-full justify-center items-center bg-black text-white">
@@ -30,10 +42,10 @@ const index = () => {
               {images.map((image, index) => (
                 <Image
                   key={index}
-                  src={image}
+                  src={image.src}
                   width={500}
                   height={300}
-                  alt={`Generated Nail Art ${index + 1}`}
+                  alt={image.alt}
                   className="w-full h-full max-w-full rounded-3xl min-w-full object-cover"
                 />
               ))}
@@ -49,7 +61,6 @@ const index = () => {
             onInput={(e) => setPrompt(e.currentTarget.textContent || "")}
           ></div>
           <button
-            onClick={generateImage}
             disabled={loading}
             className="absolute flex items-center justify-center bottom-3 right-3 bg-[#6d6aff] text-white px-4 py-2 rounded-4xl hover:bg-[#5a5ae8]"
           >
