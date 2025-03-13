@@ -1,75 +1,90 @@
 import EmptyImage from "@/components/CreatePage/EmptyImage";
-import PromptBox from "@/components/CreatePage/PromptBox";
-import ShowImageBox from "@/components/CreatePage/ShowImageBox";
 import Image from "next/image";
 import React, { useState } from "react";
 
-import img1 from "@/assets/images/test1.jpg";
-import img2 from "@/assets/images/test2.jpg";
-import img3 from "@/assets/images/test3.jpg";
-import img4 from "@/assets/images/test4.jpg";
-
-const images = [
-  { id: 1, src: img1, alt: "이미지1" },
-  { id: 2, src: img2, alt: "이미지2" },
-  { id: 3, src: img3, alt: "이미지3" },
-  { id: 4, src: img4, alt: "이미지4" },
-];
-
-const index = () => {
+const CreatePage = () => {
   const [prompt, setPrompt] = useState("");
-  // const [images, setImages] = useState([]);
+  const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  console.log(prompt);
+  const generateImage = async () => {
+    if (!prompt.trim()) {
+      setError("프롬프트를 입력해주세요.");
+      return;
+    }
 
-  // const generateImage = async () => {
-  //   setLoading(true);
-  //   const response = await fetch(
-  //     `http://127.0.0.1:8000/generate?prompt=${prompt}+nail+art&num_images=4`
-  //   );
-  //   const blob = await response.blob();
-  //   setImages(URL.createObjectURL(blob));
-  //   setLoading(false);
-  // };
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/generate?prompt=${encodeURIComponent(
+          prompt + " nail art"
+        )}&num_images=4`
+      );
+
+      if (!response.ok) {
+        throw new Error("이미지 생성에 실패했습니다.");
+      }
+
+      const data = await response.json();
+      const generatedImages = data.images.map((img) => ({
+        id: img.id,
+        src: `data:image/png;base64,${img.base64}`,
+        alt: `Generated nail art image ${img.id}`,
+      }));
+
+      setImages(generatedImages);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="flex h-full w-full justify-center items-center bg-black text-white">
-      <div className="flex flex-col items-center pt-[5rem] pb-5 justify-center w-full h-full flex-1 gap-[1.5rem] pr-[1.5rem] pl-[1.5rem] max-w-[125rem] min-w-0 min-h-0">
+    <div className="flex min-h-screen w-full items-center justify-center bg-black text-white">
+      <div className="flex w-full max-w-7xl flex-col items-center gap-6 p-6">
+        {/* 이미지 표시 영역 */}
         {images.length > 0 ? (
-          <div className="w-full h-full max-w-[75rem] min-w-[0] max-h-[full] flex-1 overflow-hidden">
-            <div className="grid grid-cols-2 gap-[0.25rem] w-full h-full">
-              {images.map((image, index) => (
+          <div className="grid w-full max-w-5xl grid-cols-2 gap-1">
+            {images.map((image) => (
+              <div key={image.id} className="relative aspect-[5/3] w-full">
                 <Image
-                  key={index}
                   src={image.src}
-                  width={500}
-                  height={300}
                   alt={image.alt}
-                  className="w-full h-full max-w-full rounded-3xl min-w-full object-cover"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="rounded-3xl object-cover"
+                  priority={image.id === 1}
+                  placeholder="blur"
+                  blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8//8/AwAI/AL+XlDx1gAAAABJRU5ErkJggg=="
                 />
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         ) : (
           <EmptyImage />
         )}
-        <div className="relative max-w-3xl w-full bg-[#2D2D2D] rounded-3xl border border-white/15 p-3 flex items-center gap-3">
+
+        {/* 프롬프트 입력 및 버튼 영역 */}
+        <div className="relative w-full max-w-3xl rounded-3xl border border-white/15 bg-[#2D2D2D] p-4">
           <div
             contentEditable
-            className="flex-1 bg-transparent border-none outline-none text-white p-2 min-h-28"
+            className="min-h-28 flex-1 border-none bg-transparent p-2 text-white outline-none"
             onInput={(e) => setPrompt(e.currentTarget.textContent || "")}
-          ></div>
-          <label class="absolute top-10 right-3 inline-flex items-center cursor-pointer">
-            <input type="checkbox" value="" class="sr-only peer" />
-            <div class="relative w-14 h-7 bg-[#3E3E3E] rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-0.5 after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-[#6d6aff]"></div>
-          </label>
+            suppressContentEditableWarning
+          />
+          {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
 
+          {/* 생성 버튼 */}
           <button
             disabled={loading}
-            className="absolute flex items-center justify-center bottom-3 right-3 bg-[#6d6aff] text-white px-4 py-2 rounded-4xl hover:bg-[#5a5ae8]"
+            onClick={generateImage}
+            className="absolute bottom-3 right-3 flex items-center justify-center rounded-full bg-[#6d6aff] px-4 py-2 text-white hover:bg-[#5a5ae8] disabled:opacity-50"
           >
-            {loading ? "생성 중 ... " : "✨ 만들기"}
+            {loading ? "생성 중..." : "✨ 만들기"}
           </button>
         </div>
       </div>
@@ -77,4 +92,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default CreatePage;
