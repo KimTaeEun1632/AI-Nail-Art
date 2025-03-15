@@ -17,7 +17,11 @@ const PromptInput = () => {
 
     try {
       const response = await fetch(
-        `/api/generate?prompt=${encodeURIComponent(prompt)}`
+        `${
+          process.env.NEXT_PUBLIC_API_BASE_URL
+        }/generate?prompt=${encodeURIComponent(
+          prompt + " nail art"
+        )}&num_images=4`
       );
       if (!response.ok) throw new Error("이미지 생성에 실패했습니다.");
       const data = await response.json();
