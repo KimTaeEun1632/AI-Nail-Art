@@ -1,4 +1,3 @@
-// components/CreatePage/EmptyImage.jsx
 import React, { useState } from "react";
 import { ImageBox, ImageGrid } from "./ImageGrid";
 

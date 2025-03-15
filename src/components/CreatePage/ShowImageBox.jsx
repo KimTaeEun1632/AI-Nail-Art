@@ -1,4 +1,3 @@
-// components/ShowImageBox.jsx
 import React, { useState } from "react";
 import { useImages } from "@/lib/ImagesContext";
 import { ImageBox, ImageGrid } from "./ImageGrid";

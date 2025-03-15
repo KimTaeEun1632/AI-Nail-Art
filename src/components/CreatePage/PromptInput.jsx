@@ -1,4 +1,3 @@
-// components/PromptInput.jsx
 import { useState } from "react";
 import { useImages } from "@/lib/ImagesContext";
 
