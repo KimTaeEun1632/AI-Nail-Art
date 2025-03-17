@@ -2,7 +2,15 @@ import { useState } from "react";
 import { useImages } from "@/lib/ImagesContext";
 
 const PromptInput = () => {
-  const { loading, error, setImages, setLoading, setError } = useImages();
+  const {
+    loading,
+    error,
+    isCarousel,
+    setIsCarousel,
+    setImages,
+    setLoading,
+    setError,
+  } = useImages();
   const [prompt, setPrompt] = useState("");
 
   const generateImage = async () => {
@@ -46,6 +54,10 @@ const PromptInput = () => {
         suppressContentEditableWarning
       />
       {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
+      <label class="absolute top-10 right-3 inline-flex items-center cursor-pointer">
+        <input type="checkbox" value="" class="sr-only peer" />
+        <div class="relative w-14 h-7 bg-[#3E3E3E] rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-0.5 after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-[#6d6aff]"></div>
+      </label>
       <button
         disabled={loading}
         onClick={generateImage}

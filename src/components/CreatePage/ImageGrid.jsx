@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const ImageBox = ({ item, onClick, isEmpty, className, children }) => (
   <div
-    className={`relative aspect-[5/3] rounded-3xl bg-[#2D2D2D] flex items-center justify-center cursor-pointer text-white transition-transform transform hover:scale-105 ${className}`}
+    className={`relative aspect-[5/3] rounded-3xl bg-[#2D2D2D] flex items-center justify-center cursor-pointer text-white transition-transform transform hover:border-[0.2rem] hover:border-[#6d6aff] ${className}`}
     onClick={onClick}
   >
     {isEmpty ? (
@@ -25,7 +25,7 @@ const ImageBox = ({ item, onClick, isEmpty, className, children }) => (
 );
 
 const ImageGrid = ({ items, onClick, isEmpty = false }) => (
-  <div className="grid grid-cols-2 gap-1">
+  <div className="w-full h-full grid grid-cols-2 gap-3  max-w-5xl">
     {items.map((item, index) => (
       <ImageBox
         key={item.id}

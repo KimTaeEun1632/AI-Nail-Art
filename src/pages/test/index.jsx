@@ -7,7 +7,7 @@ const CreatePage = () => {
   return (
     <ImagesProvider>
       <div className="relative flex min-h-screen w-full items-center justify-center bg-black text-white">
-        <div className="flex w-full max-w-7xl flex-col justify-between items-center gap-6 p-6">
+        <div className="flex w-full h-full flex-col justify-between items-center gap-6 p-6">
           <ShowImageBox />
           <PromptInput />
         </div>

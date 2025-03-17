@@ -4,13 +4,23 @@ import { createContext, useContext, useState } from "react";
 const ImagesContext = createContext();
 
 export const ImagesProvider = ({ children }) => {
+  const [isCarousel, setIsCarousel] = useState(false);
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   return (
     <ImagesContext.Provider
-      value={{ images, loading, error, setImages, setLoading, setError }}
+      value={{
+        images,
+        loading,
+        error,
+        isCarousel,
+        setImages,
+        setLoading,
+        setError,
+        setIsCarousel,
+      }}
     >
       {children}
     </ImagesContext.Provider>
