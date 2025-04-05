@@ -4,9 +4,11 @@ import Image from "next/image";
 import React, { useState } from "react";
 import arrow from "@/assets/images/arrow.svg";
 import SideBar from "../Common/SideBar";
+import { useSession } from "next-auth/react";
 
 const Nav = () => {
   const [isOpenSideBar, setIsOpenSideBar] = useState(false);
+  const { status, data: session } = useSession();
 
   const handOpenSideBar = (event) => {
     event.preventDefault();
@@ -37,7 +39,11 @@ const Nav = () => {
               />
             </button>
           </div>
-          <div>프로필</div>
+          {status === "authenticated" ? (
+            <div>{session.user.name}</div>
+          ) : (
+            <Link href="/auth/signin">로그인</Link>
+          )}
         </div>
       </header>
 
