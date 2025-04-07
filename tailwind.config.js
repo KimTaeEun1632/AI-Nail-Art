@@ -10,10 +10,14 @@ module.exports = {
       mobile: { max: "768px" },
       deskTop: { min: "769px" },
     },
-    extend: {},
+    extend: {
+      height: {
+        mainImg: "32rem",
+      },
+    },
     borderWidth: {
       6: "6px",
     },
   },
-  plugins: [],
+  plugins: ["@tailwindcss/postcss"],
 };

@@ -21,7 +21,7 @@ const Nav = () => {
 
   return (
     <>
-      <header className="flex items-center fixed z-100 text-white top-0 w-full h-20">
+      <header className="flex items-center fixed z-100 text-white top-0 w-full h-20 bg-black">
         <div className="flex justify-between items-center pl-10 pr-10 w-full h-full">
           <div className="relative flex justify-center items-center">
             <Link className="text-2xl" href="/">
@@ -40,7 +40,10 @@ const Nav = () => {
             </button>
           </div>
           {status === "authenticated" ? (
-            <div>{session.user.name}</div>
+            <div>
+              <span>{session.user.name}</span>{" "}
+              <Link href="/api/auth/signout">로그아웃</Link>
+            </div>
           ) : (
             <Link href="/auth/signin">로그인</Link>
           )}
