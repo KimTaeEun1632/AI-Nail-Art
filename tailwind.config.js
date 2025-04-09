@@ -1,10 +1,23 @@
 module.exports = {
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}",
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    screens: {
+      tablet: { min: "769px", max: "1200px" },
+      mobile: { max: "768px" },
+      deskTop: { min: "769px" },
+    },
+    extend: {
+      height: {
+        mainImg: "32rem",
+      },
+    },
+    borderWidth: {
+      6: "6px",
+    },
   },
-  plugins: [],
+  plugins: ["@tailwindcss/postcss"],
 };
