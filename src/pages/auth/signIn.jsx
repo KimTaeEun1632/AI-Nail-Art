@@ -40,6 +40,7 @@ const signin = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#ededed]">
       <div className="bg-white">
+        로그인페이지
         <form>
           <input
             className="border "
