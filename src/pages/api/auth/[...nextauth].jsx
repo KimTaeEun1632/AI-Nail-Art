@@ -14,13 +14,13 @@ export const authOptions = {
       name: "Credentials",
       type: "credentials",
       credentials: {
-        username: { label: "Email", type: "text" },
+        email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
         try {
           const response = await auth.signIn({
-            email: credentials.username,
+            email: credentials.email,
             password: credentials.password,
           });
           const { user, accessToken, refreshToken } = response;
@@ -81,7 +81,7 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 
   pages: {
-    signIn: "auth/signin",
+    signIn: "/auth/signin",
   },
 };
 
