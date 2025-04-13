@@ -130,7 +130,7 @@ const signup = () => {
         </div>
         <div className="flex gap-2">
           <span>이미 가압하셨나요?</span>
-          <Link href="/auth/signup" className="underline text-blue-600">
+          <Link href="/auth/signin" className="underline text-blue-600">
             로그인
           </Link>
         </div>
