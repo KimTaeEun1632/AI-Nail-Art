@@ -15,9 +15,10 @@ const SignInput = forwardRef(
     ref
   ) => {
     return (
-      <div>
+      <div className="flex flex-col gap-1">
         <label htmlFor={name}>{label}</label>
         <input
+          className="border rounded-md w-full h-14 border-[#CBC9CF]"
           placeholder={placeholder}
           name={name}
           type={type}
@@ -25,7 +26,9 @@ const SignInput = forwardRef(
           {...props}
           disabled={disabled}
         />
-        {isError && <div>{errorMessage}</div>}
+        {isError && (
+          <span className="text-red-400 text-[14px] ">{errorMessage}</span>
+        )}
       </div>
     );
   }

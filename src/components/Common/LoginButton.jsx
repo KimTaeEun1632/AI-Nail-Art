@@ -1,11 +1,11 @@
 import React from "react";
 import { signIn } from "next-auth/react";
 
-const LoginButton = () => {
+const GoogleLoinButton = ({ ...props }) => {
   return (
     <>
       <button
-        className="flex items-center justify-center gap-2 px-6 py-3 bg-[#dafba6] rounded-full hover:bg-[#edfad9] text-gray-700 font-medium cursor-pointer"
+        {...props}
         onClick={() =>
           signIn("google", {
             callbackUrl: "http://localhost:3000/test",
@@ -40,4 +40,4 @@ const LoginButton = () => {
   );
 };
 
-export default LoginButton;
+export default GoogleLoinButton;
