@@ -1,9 +1,10 @@
 import React from "react";
 import Image from "next/image";
+import HoverAction from "./HoverAction";
 
-const ImageBox = ({ item, onClick, isEmpty, className, children }) => (
+const ImageBox = ({ item, onClick, isEmpty, className }) => (
   <div
-    className={`relative aspect-[5/3] rounded-3xl bg-[#2D2D2D] flex items-center justify-center cursor-pointer text-white transition-transform transform hover:border-[0.2rem] hover:border-[#6d6aff] ${className}`}
+    className={`relative aspect-[5/3] rounded-3xl bg-[#2D2D2D] flex items-center justify-center cursor-pointer text-white transition-transform transform hover:border-[0.2rem] hover:border-[#6d6aff] group ${className}`}
     onClick={onClick}
   >
     {isEmpty ? (
@@ -20,7 +21,7 @@ const ImageBox = ({ item, onClick, isEmpty, className, children }) => (
         blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8//8/AwAI/AL+XlDx1gAAAABJRU5ErkJggg=="
       />
     )}
-    {children}
+    <HoverAction />
   </div>
 );
 

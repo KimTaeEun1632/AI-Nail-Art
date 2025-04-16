@@ -21,21 +21,18 @@ const SwiperCarousel = ({ images, initialSlide }) => {
           modifier: 1,
           slideShadows: true,
         }}
-        pagination={{ clickable: true }}
+        pagination={{ clickable: true, el: ".swiper-pagination" }}
         initialSlide={initialSlide} // 클릭한 슬라이드에서 시작
         className="rounded-3xl"
       >
         {images.map((item) => (
           <SwiperSlide key={item.id}>
-            <div className="relative w-full flex justify-center rounded-3xl">
-              <ImageBox
-                item={item}
-                isEmpty={false} // 클릭 시 그리드로 돌아감
-                className="w-full max-w-2xl "
-              />
+            <div className="relative w-full flex justify-center rounded-3xl pb-5">
+              <ImageBox item={item} className="w-full max-w-2xl " />
             </div>
           </SwiperSlide>
         ))}
+        <div className="swiper-pagination relative" />
       </Swiper>
     </div>
   );
