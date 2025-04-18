@@ -65,7 +65,7 @@ const Nav = () => {
               transition={{ duration: 0.1 }}
               className="absolute top-20 left-10"
             >
-              <SideBar />
+              <SideBar handleCloseSideBar={handleCloseSideBar} />
             </motion.div>
           </div>
         )}

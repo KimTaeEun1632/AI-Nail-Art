@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useImages } from "@/lib/ImagesContext";
 import Toggle from "../Common/Toggle";
+import { useSession } from "next-auth/react";
 
 const PromptInput = () => {
   const {
@@ -13,6 +14,8 @@ const PromptInput = () => {
     setError,
   } = useImages();
   const [prompt, setPrompt] = useState("");
+  const { data: session } = useSession();
+  console.log("세선", session);
 
   const generateImage = async () => {
     if (!prompt.trim()) {
@@ -29,7 +32,12 @@ const PromptInput = () => {
           process.env.NEXT_PUBLIC_API_BASE_URL
         }/generate?prompt=${encodeURIComponent(
           prompt + " nail art"
-        )}&num_images=4`
+        )}&num_images=4`,
+        {
+          headers: {
+            Authorization: `Bearer ${session?.accessToken}`,
+          },
+        }
       );
       if (!response.ok) throw new Error("이미지 생성에 실패했습니다.");
       const data = await response.json();
