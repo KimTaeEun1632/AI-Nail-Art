@@ -35,7 +35,7 @@ const PromptInput = () => {
         )}&num_images=4`,
         {
           headers: {
-            Authorization: `Bearer ${session?.accessToken}`,
+            Authorization: `Bearer ${session?.user?.accessToken}`,
           },
         }
       );
