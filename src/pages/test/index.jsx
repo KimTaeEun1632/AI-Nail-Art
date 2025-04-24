@@ -28,18 +28,16 @@ const testData = [
 const index = () => {
   const [testImage, setTestImage] = useState({});
 
-  console.log(testData);
-
   useEffect(() => {
     const groupedImages = testData.reduce((acc, img) => {
       const date = new Date(img.created_at);
       const a = new Intl.DateTimeFormat("kr").format(date);
+      console.log(a);
       if (!acc[a]) acc[a] = [];
       acc[a].push(img);
       return acc;
     }, {});
     setTestImage(groupedImages);
-    console.log(groupedImages);
   }, []);
 
   console.log(testImage);

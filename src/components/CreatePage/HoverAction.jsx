@@ -11,6 +11,28 @@ const HoverAction = () => {
     console.log(`${action} button clicked`);
   };
 
+  const handleBookmark = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/images/bookmark/${image.id}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // 세션에서 가져오거나 상태 관리 사용
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("북마크 업데이트 실패");
+      }
+      const data = await response.json();
+      setIsBookmarked(data.is_bookmarked);
+      onBookmarkToggle(image.id, data.is_bookmarked); // 부모 컴포넌트에 상태 업데이트 알림
+    } catch (err) {
+      console.error("북마크 에러:", err);
+    }
+  };
+
   return (
     <div className="absolute inset-0 pointer-events-none z-10">
       <div className="absolute top-2 right-2 -translate-y-[52px] opacity-0 group-hover:opacity-100 group-hover:-translate-y-0 transition duration-300 z-10">
@@ -26,7 +48,7 @@ const HoverAction = () => {
           <div className="relative group/button">
             <button
               className="p-1 hover:bg-white/10 rounded cursor-pointer"
-              onClick={(e) => handleButtonClick("Bookmark", e)}
+              onClick={handleBookmark}
             >
               <Image
                 src={bookmark}

@@ -1,6 +1,8 @@
 // components/MyLibrary.jsx
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import HoverAction from "@/components/CreatePage/HoverAction";
+import BookmarkedImages from "@/components/MyLibraryPage/BookmarkedImages";
 
 const MyLibrary = () => {
   const { data: session, status } = useSession();
@@ -60,6 +62,7 @@ const MyLibrary = () => {
   return (
     <div className="min-h-screen bg-black text-white py-10 px-4">
       <h1 className="text-3xl font-bold mb-12">내 라이브러리</h1>
+      <BookmarkedImages />
       {Object.keys(formattedData).length === 0 ? (
         <p className="text-center text-gray-500">저장된 이미지가 없습니다.</p>
       ) : (
@@ -70,13 +73,14 @@ const MyLibrary = () => {
               {images.map((img) => (
                 <div
                   key={img.id}
-                  className="flex-none w-32 h-32 border rounded-lg overflow-hidden shadow-md"
+                  className="flex-none w-32 h-32 border rounded-lg overflow-hidden shadow-md relative cursor-pointer transition-transform transform  hover:border-[0.2rem] hover:border-[#6d6aff] group"
                 >
                   <img
                     src={`http://127.0.0.1:8000/${img.file_path}`}
                     alt={img.prompt}
                     className="w-full h-full object-cover"
                   />
+                  <HoverAction />
                 </div>
               ))}
             </div>
