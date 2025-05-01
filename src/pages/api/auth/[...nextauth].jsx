@@ -12,17 +12,31 @@ export const authOptions = {
     }),
     CredentialsProvider({
       name: "Credentials",
-      type: "credentials",
       credentials: {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
         try {
-          const user = await auth.signIn({
+          // 토큰 기반 인증
+          if (credentials.accessToken && credentials.refreshToken) {
+            return {
+              id: credentials.id,
+              email: credentials.email,
+              nickname: credentials.nickname,
+              accessToken: credentials.accessToken,
+              refreshToken: credentials.refreshToken,
+            };
+          }
+          // 이메일/비밀번호 인증
+          if (!credentials.email || !credentials.password) {
+            throw new Error("Email and password are required");
+          }
+          const reqBody = {
             email: credentials.email,
             password: credentials.password,
-          });
+          };
+          const user = await auth.signIn(reqBody);
           return {
             id: user.user.id,
             email: user.user.email,
@@ -31,7 +45,7 @@ export const authOptions = {
             refreshToken: user.refreshToken,
           };
         } catch (error) {
-          console.error("Login failed", error);
+          console.error("Authorize failed:", error);
           return null;
         }
       },
@@ -39,8 +53,12 @@ export const authOptions = {
   ],
 
   callbacks: {
-    async signIn({ user }) {
-      return !!user;
+    async signIn({ credentials }) {
+      if (credentials) {
+        return true;
+      } else {
+        return false;
+      }
     },
     async jwt({ token, user }) {
       if (user) {

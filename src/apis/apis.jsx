@@ -1,49 +1,77 @@
-// lib/api.js
 import axios from "axios";
-import { getSession, signIn, signOut } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 
-const requestor = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_API_BASE_URL}`,
-});
+const axiosRequestConfig = {
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  responseType: "json",
+  headers: {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+  },
+};
 
-// 요청 인터셉터: 모든 요청에 액세스 토큰 추가
+const requestor = axios.create(axiosRequestConfig);
+
+const updateSession = async (data) => {
+  try {
+    const response = await signIn("credentials", {
+      accessToken: data?.accessToken,
+      refreshToken: data?.refreshToken,
+      id: data.user?.id,
+      email: data.user?.email,
+      nickname: data.user?.nickname,
+      redirect: false,
+    });
+  } catch (error) {
+    console.error("세션업데이트 에러:", error);
+    throw error;
+  }
+};
+
+requestor.interceptors.request.use(
+  async (config) => {
+    const session = await getSession();
+    if (session?.user?.accessToken) {
+      config.headers.Authorization = `Bearer ${session.user.accessToken}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 requestor.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const originalRequest = error.config;
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
+    const { config, response } = error;
+    if (response?.status === 401) {
+      const originalRequest = config;
+      const session = await getSession();
+
+      if (!session?.user?.refreshToken) {
+        window.location.replace("/auth/signin");
+        return Promise.reject(new Error("세션이 없거나, 리프레쉬 토큰 만료"));
+      }
+
       try {
-        const session = await getSession();
-        if (!session || !session.refreshToken) {
-          throw new Error("No refresh token available");
-        }
-        const response = await axios.post(
+        const { data } = await axios.post(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/refresh`,
-          {
-            refresh_token: session.refreshToken,
-          }
+          { refresh_token: session.user.refreshToken }
         );
-        const { accessToken, refreshToken, user } = response.data;
 
-        // 세션 업데이트
-
-        await signIn("credentials", {
-          email: user.email,
-          password: null,
-          accessToken,
-          refreshToken,
-          redirect: false,
+        await updateSession({
+          accessToken: data.accessToken,
+          refreshToken: data.refreshToken,
+          user: data.user,
         });
 
-        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-        return api(originalRequest);
-      } catch (refreshError) {
-        console.error("Token refresh failed:", refreshError);
-        await signOut({ callbackUrl: "/" });
-        return Promise.reject(refreshError);
+        originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+        return axios(originalRequest);
+      } catch (e) {
+        console.error("리프레쉬 토큰 에러:", e);
       }
     }
+
+    console.error("API 에러:", error.message);
     return Promise.reject(error);
   }
 );

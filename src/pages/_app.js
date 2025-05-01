@@ -2,6 +2,7 @@ import MainLayout from "@/components/Layout/MainLayout";
 import { ImagesProvider } from "@/lib/ImagesContext";
 import "@/styles/globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { SessionProvider } from "next-auth/react";
 
 export default function App({
@@ -16,6 +17,7 @@ export default function App({
       <SessionProvider session={session}>
         <ImagesProvider>
           {getLayout(<Component {...pageProps} />)}
+          <ReactQueryDevtools initialIsOpen={false} />
         </ImagesProvider>
       </SessionProvider>
     </QueryClientProvider>
