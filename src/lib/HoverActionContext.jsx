@@ -49,6 +49,9 @@ export const HoverActionProvider = ({ children }) => {
     <HoverActionContext.Provider
       value={{
         handleBookmark: bookmarkMutation.mutate,
+        showToast,
+        toastMessage,
+        setShowToast,
       }}
     >
       {children}

@@ -8,7 +8,7 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { useHoverAction } from "@/lib/HoverActionContext";
 
-const HoverAction = ({ image, onBookmarkToggle }) => {
+const HoverAction = ({ image }) => {
   const { data: session } = useSession();
   const { handleBookmark } = useHoverAction();
 
@@ -16,15 +16,6 @@ const HoverAction = ({ image, onBookmarkToggle }) => {
     event.stopPropagation();
     console.log(`${action} button clicked`);
   };
-
-  // const handleBookmark = async (event) => {
-  //   event.stopPropagation();
-  //   if (!session?.user?.accessToken) {
-  //     console.error("No access token available");
-  //     return;
-  //   }
-  //   onBookmarkToggle(image.id);
-  // };
 
   return (
     <div className="absolute inset-0 pointer-events-none z-10">
