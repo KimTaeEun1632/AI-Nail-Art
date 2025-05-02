@@ -6,23 +6,25 @@ import down from "@/assets/images/down.svg";
 import duplicate from "@/assets/images/duplicate.svg";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
+import { useHoverAction } from "@/lib/HoverActionContext";
 
 const HoverAction = ({ image, onBookmarkToggle }) => {
   const { data: session } = useSession();
+  const { handleBookmark } = useHoverAction();
 
   const handleButtonClick = (action, event) => {
     event.stopPropagation();
     console.log(`${action} button clicked`);
   };
 
-  const handleBookmark = async (event) => {
-    event.stopPropagation();
-    if (!session?.user?.accessToken) {
-      console.error("No access token available");
-      return;
-    }
-    onBookmarkToggle(image.id);
-  };
+  // const handleBookmark = async (event) => {
+  //   event.stopPropagation();
+  //   if (!session?.user?.accessToken) {
+  //     console.error("No access token available");
+  //     return;
+  //   }
+  //   onBookmarkToggle(image.id);
+  // };
 
   return (
     <div className="absolute inset-0 pointer-events-none z-10">
@@ -39,7 +41,7 @@ const HoverAction = ({ image, onBookmarkToggle }) => {
           <div className="relative group/button">
             <button
               className="p-1 hover:bg-white/10 rounded cursor-pointer"
-              onClick={handleBookmark}
+              onClick={() => handleBookmark(image.id)}
             >
               {image?.is_bookmarked ? (
                 <Image

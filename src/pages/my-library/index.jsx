@@ -25,45 +25,45 @@ const MyLibrary = () => {
   console.log("그룹화된 이미지:", formattedData);
   console.log("북마크된 이미지:", bookmarkedImages);
 
-  const bookmarkMutation = useMutation({
-    mutationFn: (imageId) => image.postBookmark(imageId),
-    onSuccess: (data) => {
-      setToastMessage(
-        data.is_bookmarked
-          ? "북마크가 추가되었습니다."
-          : "북마크가 해제되었습니다."
-      );
-      setShowToast(true);
-      return data;
-    },
-    onMutate: async (imageId) => {
-      await queryClient.cancelQueries({ queryKey: ["myLibrary"] });
-      const previousData = queryClient.getQueryData(["myLibrary"]);
-      if (previousData) {
-        const isBookmarked = previousData.find(
-          (img) => img.id === imageId
-        )?.is_bookmarked;
-        const updatedData = previousData.map((img) =>
-          img.id === imageId ? { ...img, is_bookmarked: !isBookmarked } : img
-        );
-        queryClient.setQueryData(["myLibrary"], updatedData);
-      }
+  // const bookmarkMutation = useMutation({
+  //   mutationFn: (imageId) => image.postBookmark(imageId),
+  //   onSuccess: (data) => {
+  //     setToastMessage(
+  //       data.is_bookmarked
+  //         ? "북마크가 추가되었습니다."
+  //         : "북마크가 해제되었습니다."
+  //     );
+  //     setShowToast(true);
+  //     return data;
+  //   },
+  //   onMutate: async (imageId) => {
+  //     await queryClient.cancelQueries({ queryKey: ["myLibrary"] });
+  //     const previousData = queryClient.getQueryData(["myLibrary"]);
+  //     if (previousData) {
+  //       const isBookmarked = previousData.find(
+  //         (img) => img.id === imageId
+  //       )?.is_bookmarked;
+  //       const updatedData = previousData.map((img) =>
+  //         img.id === imageId ? { ...img, is_bookmarked: !isBookmarked } : img
+  //       );
+  //       queryClient.setQueryData(["myLibrary"], updatedData);
+  //     }
 
-      return { previousData };
-    },
-    onError: (err, context) => {
-      queryClient.setQueryData(["myLibrary"], context.previousData);
-      console.error("Bookmark mutation error:", err);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries(["myLibrary"]);
-    },
-  });
+  //     return { previousData };
+  //   },
+  //   onError: (err, context) => {
+  //     queryClient.setQueryData(["myLibrary"], context.previousData);
+  //     console.error("Bookmark mutation error:", err);
+  //   },
+  //   onSettled: () => {
+  //     queryClient.invalidateQueries(["myLibrary"]);
+  //   },
+  // });
 
-  const handleBookmarkToggle = (imageId) => {
-    console.log("Toggling bookmark for image:", imageId);
-    bookmarkMutation.mutate(imageId);
-  };
+  // const handleBookmarkToggle = (imageId) => {
+  //   console.log("Toggling bookmark for image:", imageId);
+  //   bookmarkMutation.mutate(imageId);
+  // };
 
   useEffect(() => {
     console.log("라이브러리 데이터", data);
@@ -118,10 +118,7 @@ const MyLibrary = () => {
                           alt={img.prompt}
                           className="w-full h-full object-cover"
                         />
-                        <HoverAction
-                          image={img}
-                          onBookmarkToggle={handleBookmarkToggle}
-                        />
+                        <HoverAction image={img} />
                       </div>
                     ))}
                   </div>

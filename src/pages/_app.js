@@ -1,4 +1,5 @@
 import MainLayout from "@/components/Layout/MainLayout";
+import { HoverActionProvider } from "@/lib/HoverActionContext";
 import { ImagesProvider } from "@/lib/ImagesContext";
 import "@/styles/globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -15,10 +16,12 @@ export default function App({
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider session={session}>
-        <ImagesProvider>
-          {getLayout(<Component {...pageProps} />)}
-          <ReactQueryDevtools initialIsOpen={false} />
-        </ImagesProvider>
+        <HoverActionProvider>
+          <ImagesProvider>
+            {getLayout(<Component {...pageProps} />)}
+            <ReactQueryDevtools initialIsOpen={false} />
+          </ImagesProvider>
+        </HoverActionProvider>
       </SessionProvider>
     </QueryClientProvider>
   );

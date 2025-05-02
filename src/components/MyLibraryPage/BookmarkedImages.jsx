@@ -1,6 +1,4 @@
 import React from "react";
-import HoverAction from "../CreatePage/HoverAction";
-
 const BookmarkedImages = ({ images }) => {
   return (
     <div>
