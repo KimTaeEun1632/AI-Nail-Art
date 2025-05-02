@@ -4,11 +4,14 @@ import HoverAction from "@/components/CreatePage/HoverAction";
 import BookmarkedImages from "@/components/MyLibraryPage/BookmarkedImages";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { image } from "@/apis/image/generate";
+import Toast from "@/components/Common/Toast";
 
 const MyLibrary = () => {
   const { data: session, status } = useSession();
   const [formattedData, setFormattedData] = useState({});
   const [bookmarkedImages, setBookmarkedImages] = useState([]);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   const queryClient = useQueryClient();
 
@@ -25,7 +28,12 @@ const MyLibrary = () => {
   const bookmarkMutation = useMutation({
     mutationFn: (imageId) => image.postBookmark(imageId),
     onSuccess: (data) => {
-      console.log("북마크 성공:", data);
+      setToastMessage(
+        data.is_bookmarked
+          ? "북마크가 추가되었습니다."
+          : "북마크가 해제되었습니다."
+      );
+      setShowToast(true);
       return data;
     },
     onMutate: async (imageId) => {
@@ -121,6 +129,9 @@ const MyLibrary = () => {
               ))
           )}
         </div>
+      )}
+      {showToast && (
+        <Toast onShow={() => setShowToast(false)}>{toastMessage}</Toast>
       )}
     </>
   );
