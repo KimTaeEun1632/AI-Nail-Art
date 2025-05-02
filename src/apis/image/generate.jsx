@@ -18,4 +18,8 @@ export const image = {
     const response = await requestor.get("/images/my-library");
     return response.data;
   },
+  postBookmark: async (imageId) => {
+    const response = await requestor.post(`/images/bookmark/${imageId}`);
+    return response.data;
+  },
 };

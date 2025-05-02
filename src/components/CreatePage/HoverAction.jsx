@@ -21,28 +21,7 @@ const HoverAction = ({ image, onBookmarkToggle }) => {
       console.error("No access token available");
       return;
     }
-
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/images/bookmark/${image.id}`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${session.user.accessToken}`,
-          },
-        }
-      );
-      if (!response.ok) {
-        throw new Error("북마크 업데이트 실패");
-      }
-      const data = await response.json();
-      onBookmarkToggle(image.id, data.is_bookmarked);
-      console.log(
-        `Bookmark updated for image ${image.id}: ${data.is_bookmarked}`
-      );
-    } catch (err) {
-      console.error("북마크 에러:", err);
-    }
+    onBookmarkToggle(image.id);
   };
 
   return (

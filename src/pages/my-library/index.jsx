@@ -2,13 +2,15 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import HoverAction from "@/components/CreatePage/HoverAction";
 import BookmarkedImages from "@/components/MyLibraryPage/BookmarkedImages";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { image } from "@/apis/image/generate";
 
 const MyLibrary = () => {
   const { data: session, status } = useSession();
   const [formattedData, setFormattedData] = useState({});
   const [bookmarkedImages, setBookmarkedImages] = useState([]);
+
+  const queryClient = useQueryClient();
 
   console.log("세션", session);
 
@@ -19,6 +21,41 @@ const MyLibrary = () => {
   });
   console.log("그룹화된 이미지:", formattedData);
   console.log("북마크된 이미지:", bookmarkedImages);
+
+  const bookmarkMutation = useMutation({
+    mutationFn: (imageId) => image.postBookmark(imageId),
+    onSuccess: (data) => {
+      console.log("북마크 성공:", data);
+      return data;
+    },
+    onMutate: async (imageId) => {
+      await queryClient.cancelQueries({ queryKey: ["myLibrary"] });
+      const previousData = queryClient.getQueryData(["myLibrary"]);
+      if (previousData) {
+        const isBookmarked = previousData.find(
+          (img) => img.id === imageId
+        )?.is_bookmarked;
+        const updatedData = previousData.map((img) =>
+          img.id === imageId ? { ...img, is_bookmarked: !isBookmarked } : img
+        );
+        queryClient.setQueryData(["myLibrary"], updatedData);
+      }
+
+      return { previousData };
+    },
+    onError: (err, context) => {
+      queryClient.setQueryData(["myLibrary"], context.previousData);
+      console.error("Bookmark mutation error:", err);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(["myLibrary"]);
+    },
+  });
+
+  const handleBookmarkToggle = (imageId) => {
+    console.log("Toggling bookmark for image:", imageId);
+    bookmarkMutation.mutate(imageId);
+  };
 
   useEffect(() => {
     console.log("라이브러리 데이터", data);
@@ -73,7 +110,10 @@ const MyLibrary = () => {
                           alt={img.prompt}
                           className="w-full h-full object-cover"
                         />
-                        <HoverAction image={img} />
+                        <HoverAction
+                          image={img}
+                          onBookmarkToggle={handleBookmarkToggle}
+                        />
                       </div>
                     ))}
                   </div>
