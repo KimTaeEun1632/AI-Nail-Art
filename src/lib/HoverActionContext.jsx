@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { image } from "@/apis/image/generate";
 
 const HoverActionContext = createContext();
@@ -45,6 +45,37 @@ export const HoverActionProvider = ({ children }) => {
     },
   });
 
+  // 클립보드 복사
+  const copyMutation = useMutation({
+    mutationFn: async (imageUrl) => {
+      const base64Response = await image.getImageBase64(imageUrl);
+      const base64Url = base64Response.base64;
+      const response = await fetch(base64Url);
+      return response;
+    },
+    onSuccess: async (response) => {
+      const contentType = response.headers.get("Content-Type") || "image/png";
+      const blob = await response.blob();
+      await navigator.clipboard.write([
+        new ClipboardItem({ [contentType]: blob }),
+      ]);
+      setToastMessage("이미지가 클립보드에 복사되었습니다.");
+      setShowToast(true);
+    },
+    onError: (err) => {
+      console.error("클립보드에러: ", err);
+      setToastMessage("클립보드 복사에 실패했습니다:" + err.message);
+      setShowToast(true);
+    },
+  });
+
+  const copyToClipboard = useCallback(
+    (imageUrl) => {
+      copyMutation.mutate(imageUrl);
+    },
+    [copyMutation]
+  );
+
   return (
     <HoverActionContext.Provider
       value={{
@@ -52,6 +83,7 @@ export const HoverActionProvider = ({ children }) => {
         showToast,
         toastMessage,
         setShowToast,
+        copyToClipboard,
       }}
     >
       {children}

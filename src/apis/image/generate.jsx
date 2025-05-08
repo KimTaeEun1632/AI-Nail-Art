@@ -20,4 +20,8 @@ export const image = {
     const response = await requestor.post(`/images/bookmark/${imageId}`);
     return response.data;
   },
+  getImageBase64: async (filePath) => {
+    const response = await requestor.get(`/images/base64/${filePath}`);
+    return response.data;
+  },
 };

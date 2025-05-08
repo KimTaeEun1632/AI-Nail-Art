@@ -9,8 +9,8 @@ import { useSession } from "next-auth/react";
 import { useHoverAction } from "@/lib/HoverActionContext";
 
 const HoverAction = ({ image }) => {
-  const { data: session } = useSession();
-  const { handleBookmark } = useHoverAction();
+  const { handleBookmark, copyToClipboard } = useHoverAction();
+  const imageUrl = image?.file_path;
 
   const handleButtonClick = (action, event) => {
     event.stopPropagation();
@@ -57,7 +57,7 @@ const HoverAction = ({ image }) => {
           <div className="relative group/button">
             <button
               className="p-1 hover:bg-white/10 rounded cursor-pointer"
-              onClick={(e) => handleButtonClick("Duplicate", e)}
+              onClick={() => copyToClipboard(imageUrl)}
             >
               <Image
                 src={duplicate}

@@ -50,11 +50,15 @@ const MyLibrary = () => {
   return (
     <>
       {isLoading ? (
-        <div>로딩중...</div>
+        <div className="min-h-screen bg-black text-white py-10 px-4">
+          로딩중...
+        </div>
       ) : (
         <div className="min-h-screen bg-black text-white py-10 px-4">
           <h1 className="text-3xl font-bold mb-12">내 라이브러리</h1>
-          <BookmarkedImages images={bookmarkedImages} />
+          <div className="mb-4">
+            <BookmarkedImages images={bookmarkedImages} />
+          </div>
           {formattedData?.length === 0 ? (
             <p className="text-center text-gray-500">
               저장된 이미지가 없습니다.
