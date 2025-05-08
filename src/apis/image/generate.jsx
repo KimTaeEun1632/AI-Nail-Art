@@ -2,12 +2,12 @@ import requestor from "../apis";
 
 export const image = {
   generateImages: async (prompt) => {
+    const nailPrompt = prompt + "nail art";
+    console.log("프롬프트", nailPrompt);
     const response = await requestor.get(
-      `/generate?prompt=${encodeURIComponent(
-        prompt + "nail art"
-      )}&num_images=4`,
+      `/generate?prompt=${encodeURIComponent(`${nailPrompt}`)}&num_images=4`,
       {
-        params: { prompt },
+        params: { nailPrompt },
       }
     );
     return response.data;
