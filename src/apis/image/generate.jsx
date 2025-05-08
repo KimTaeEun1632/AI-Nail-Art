@@ -21,7 +21,9 @@ export const image = {
     return response.data;
   },
   getImageBase64: async (filePath) => {
+    console.log(filePath);
     const response = await requestor.get(`/images/base64/${filePath}`);
+    console.log("api 데이터", response.data);
     return response.data;
   },
 };

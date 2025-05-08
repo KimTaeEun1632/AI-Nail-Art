@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react";
 import { useHoverAction } from "@/lib/HoverActionContext";
 
 const HoverAction = ({ image }) => {
-  const { handleBookmark, copyToClipboard } = useHoverAction();
+  const { handleBookmark, copyToClipboard, downloadImage } = useHoverAction();
   const imageUrl = image?.file_path;
 
   const handleButtonClick = (action, event) => {
@@ -73,7 +73,7 @@ const HoverAction = ({ image }) => {
           <div className="relative group/button">
             <button
               className="p-1 hover:bg-white/10 rounded cursor-pointer"
-              onClick={(e) => handleButtonClick("Download", e)}
+              onClick={() => downloadImage(imageUrl)}
             >
               <Image src={down} alt="이미지 다운로드" width={20} height={20} />
             </button>
