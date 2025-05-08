@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { image } from "@/apis/image/generate";
 import Toast from "@/components/Common/Toast";
 import { useHoverAction } from "@/lib/HoverActionContext";
+import HistoryImage from "@/components/MyLibraryPage/HistoryImage";
 
 const MyLibrary = () => {
   const { data: session, status } = useSession();
@@ -25,7 +26,6 @@ const MyLibrary = () => {
 
   useEffect(() => {
     console.log("라이브러리 데이터", data);
-    // 날짜별로 그룹화
     const groupedImages = data?.reduce((acc, img) => {
       const date = new Date(img.created_at);
       const formattedDate = new Intl.DateTimeFormat("kr").format(date);
@@ -34,7 +34,6 @@ const MyLibrary = () => {
       return acc;
     }, {});
     setFormattedData(groupedImages);
-    // 북마크된 이미지만 추출
     const bookmarked = data?.filter((img) => img.is_bookmarked);
     setBookmarkedImages(bookmarked);
   }, [data]);
@@ -54,8 +53,7 @@ const MyLibrary = () => {
           로딩중...
         </div>
       ) : (
-        <div className="min-h-screen bg-black text-white py-10 px-4">
-          <h1 className="text-3xl font-bold mb-12">내 라이브러리</h1>
+        <div className="min-h-screen bg-black text-white py-24 px-4">
           <div className="mb-4">
             <BookmarkedImages images={bookmarkedImages} />
           </div>
@@ -64,28 +62,7 @@ const MyLibrary = () => {
               저장된 이미지가 없습니다.
             </p>
           ) : (
-            Object.entries(formattedData || {})
-              .sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA)) // 최신순 정렬
-              .map(([date, images]) => (
-                <div key={date} className="mb-8">
-                  <h2 className="text-xl font-semibold mb-4">{date}</h2>
-                  <div className="flex overflow-x-auto space-x-4 pb-4">
-                    {images.map((img) => (
-                      <div
-                        key={img.id}
-                        className="flex-none w-32 h-32 border rounded-lg overflow-hidden shadow-md relative cursor-pointer transition-transform transform hover:border-[0.2rem] hover:border-[#6d6aff] group"
-                      >
-                        <img
-                          src={`http://127.0.0.1:8000/${img.file_path}`}
-                          alt={img.prompt}
-                          className="w-full h-full object-cover"
-                        />
-                        <HoverAction image={img} />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))
+            <HistoryImage formattedData={formattedData} />
           )}
         </div>
       )}
