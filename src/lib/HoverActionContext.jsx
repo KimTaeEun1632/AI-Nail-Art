@@ -114,6 +114,49 @@ export const HoverActionProvider = ({ children }) => {
     },
     [downloadMutation]
   );
+
+  //이미지 삭제
+
+  const deleteImageMutation = useMutation({
+    mutationFn: (imageId) => image.deleteImage(imageId),
+    onSuccess: () => {
+      setToastMessage("이미지가 삭제되었습니다.");
+      setShowToast(true);
+    },
+    onMutate: async (imageId) => {
+      await queryClient.cancelQueries({ queryKey: ["myLibrary"] });
+      const previousLibraryData = queryClient.getQueryData(["myLibrary"]);
+      if (previousLibraryData) {
+        const updatedData = previousLibraryData.filter(
+          (img) => img.id !== imageId
+        );
+        queryClient.setQueryData(["myLibrary"], updatedData);
+      }
+
+      return { previousLibraryData };
+    },
+    onError: (context) => {
+      if (context.previousLibraryData) {
+        queryClient.setQueryData(["myLibrary"], previousLibraryData);
+      }
+      setToastMessage("이미지 삭제에 실패했습니다.");
+      setShowToast(true);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(["myLibrary"]);
+    },
+  });
+
+  const deleteImage = useCallback(
+    (imageId) => {
+      if (window.confirm("이미지를 삭제하시겠습니까?")) {
+        console.log("Deleting imageId:", imageId);
+        deleteImageMutation.mutate(imageId);
+      }
+    },
+    [deleteImageMutation]
+  );
+
   return (
     <HoverActionContext.Provider
       value={{
@@ -123,6 +166,7 @@ export const HoverActionProvider = ({ children }) => {
         setShowToast,
         copyToClipboard,
         downloadImage,
+        deleteImage,
       }}
     >
       {children}

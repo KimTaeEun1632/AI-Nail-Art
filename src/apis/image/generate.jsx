@@ -26,4 +26,8 @@ export const image = {
     console.log("api 데이터", response.data);
     return response.data;
   },
+  deleteImage: async (imageId) => {
+    const response = await requestor.delete(`/images/delete/${imageId}`);
+    return response.data;
+  },
 };
