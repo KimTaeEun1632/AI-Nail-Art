@@ -15,10 +15,10 @@ const HoverAction = ({ image }) => {
   return (
     <div className="absolute inset-0 pointer-events-none z-50">
       <div
-        className="absolute bottom-2 right-2 translate-y-[52px] opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition duration-300 pointer-events-auto z-60"
+        className="absolute flex items-center justify-center w-full bottom-2 translate-y-[52px] opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition duration-300 pointer-events-auto z-60"
         onMouseEnter={() => console.log("Buttons container hovered")}
       >
-        <div className="flex items-center gap-2 bg-black/50 px-2 py-1 rounded">
+        <div className="flex items-center gap-2 bg-gray-800 px-2 py-1 rounded">
           <div className="relative group/button">
             <button
               className="p-1 hover:bg-white/10 rounded cursor-pointer"

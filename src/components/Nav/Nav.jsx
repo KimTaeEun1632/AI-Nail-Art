@@ -21,7 +21,7 @@ const Nav = () => {
 
   return (
     <>
-      <header className="flex items-center fixed z-100 text-white top-0 w-full h-20 bg-black">
+      <header className="flex items-center fixed z-100 text-white top-0 w-full h-20 bg-linear-to-b from-black black/50 to-black/0">
         <div className="flex justify-between items-center pl-10 pr-10 w-full h-full">
           <div className="relative flex justify-center items-center">
             <Link className="text-2xl" href="/">
