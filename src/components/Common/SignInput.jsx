@@ -18,7 +18,7 @@ const SignInput = forwardRef(
       <div className="flex flex-col gap-1">
         <label htmlFor={name}>{label}</label>
         <input
-          className="border rounded-md w-full h-14 border-[#CBC9CF]"
+          className="border rounded-md w-full h-14 border-[#CBC9CF] p-2"
           placeholder={placeholder}
           name={name}
           type={type}
