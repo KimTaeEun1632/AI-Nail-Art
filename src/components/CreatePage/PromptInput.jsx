@@ -2,36 +2,12 @@ import { useState } from "react";
 import { useImages } from "@/lib/ImagesContext";
 import Toggle from "../Common/Toggle";
 import { useSession } from "next-auth/react";
-import { useMutation } from "@tanstack/react-query";
-import { image } from "@/apis/image/generate";
 
-const PromptInput = () => {
-  const { loading, error, setImages, setLoading, setError } = useImages();
+const PromptInput = ({ generateMutation, loading }) => {
+  const { error, setError } = useImages();
   const [prompt, setPrompt] = useState("");
   const { data: session } = useSession();
   console.log("세선", session);
-
-  const generateMutation = useMutation({
-    mutationFn: (prompt) => image.generateImages(prompt),
-    onMutate: () => {
-      setLoading(true);
-      setError(null);
-    },
-    onSuccess: (data) => {
-      const generatedImages = data.images.map((img) => ({
-        id: img.id,
-        src: `data:image/png;base64,${img.base64}`,
-        alt: `Generated nail art image ${img.id}`,
-      }));
-      setImages(generatedImages);
-    },
-    onError: (err) => {
-      setError(err.message);
-    },
-    onSettled: () => {
-      setLoading(false);
-    },
-  });
 
   const handleGenerateImage = () => {
     if (!prompt.trim()) {

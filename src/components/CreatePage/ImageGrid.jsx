@@ -21,7 +21,7 @@ const ImageBox = ({ item, onClick, isEmpty, className }) => (
         blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8//8/AwAI/AL+XlDx1gAAAABJRU5ErkJggg=="
       />
     )}
-    {!isEmpty && <HoverAction />}
+    {!isEmpty && <HoverAction image={item} />}
   </div>
 );
 
