@@ -1,5 +1,6 @@
 import React from "react";
 import HoverAction from "../CreatePage/HoverAction";
+import MyLibraryImageSection from "./MyLibraryImageSection";
 
 const HistoryImage = ({ formattedData }) => {
   const data = Object.entries(formattedData || {}).sort(
@@ -20,19 +21,9 @@ const HistoryImage = ({ formattedData }) => {
           {data.map(([date, images]) => (
             <div key={date} className="mb-8">
               <h2 className="text-xl font-semibold mb-4">{date}</h2>
-              <div className="relative grid grid-cols-2 gap-x-1 pb-4 sm:grid-cols-4 lg:grid-cols-6 2xl:grid-cols-8">
+              <div className="relative grid grid-cols-2 gap-x-1 pb-4 sm:grid-cols-4 lg:grid-cols-6 2xl:grid-cols-8 auto-rows-max">
                 {images.map((img) => (
-                  <div
-                    key={img.id}
-                    className="border rounded-lg shadow-md relative cursor-pointer transition-transform transform hover:border-[0.2rem] hover:border-[#6d6aff] group z-0"
-                  >
-                    <img
-                      src={`http://127.0.0.1:8000/${img.file_path}`}
-                      alt={img.prompt}
-                      className="w-full h-full object-cover rounded-lg"
-                    />
-                    <HoverAction image={img} />
-                  </div>
+                  <MyLibraryImageSection key={img.id} image={img} />
                 ))}
               </div>
             </div>
