@@ -3,12 +3,13 @@ import LiveBackground from "@/components/Common/LiveBackground";
 import PromptInput from "@/components/CreatePage/PromptInput";
 import ShowImageBox from "@/components/CreatePage/ShowImageBox";
 import { useImages } from "@/lib/ImagesContext";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import React from "react";
 
 const CreatePage = () => {
   const { setImages, setError } = useImages();
+  const queryClient = useQueryClient();
 
   const generateMutation = useMutation({
     mutationFn: (prompt) => image.generateImages(prompt),
@@ -17,8 +18,10 @@ const CreatePage = () => {
         id: img.id,
         src: `data:image/png;base64,${img.base64}`,
         alt: `Generated nail art image ${img.id}`,
+        is_bookmarked: img.is_bookmarked,
       }));
       setImages(generatedImages);
+      queryClient.setQueryData(["generatedImages"], generatedImages);
     },
     onError: (err) => {
       setError(err.message);

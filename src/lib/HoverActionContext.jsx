@@ -34,7 +34,20 @@ export const HoverActionProvider = ({ children }) => {
         queryClient.setQueryData(["myLibrary"], updatedData);
       }
 
-      return { previousData };
+      // generatedImages 캐시 업데이트
+      await queryClient.cancelQueries({ queryKey: ["generatedImages"] });
+      const previousGenerated = queryClient.getQueryData(["generatedImages"]);
+      if (previousGenerated) {
+        const isBookmarked = previousGenerated.find(
+          (img) => img.id === imageId
+        )?.is_bookmarked;
+        const updatedGenerated = previousGenerated.map((img) =>
+          img.id === imageId ? { ...img, is_bookmarked: !isBookmarked } : img
+        );
+        queryClient.setQueryData(["generatedImages"], updatedGenerated);
+      }
+
+      return { previousData, previousGenerated };
     },
     onError: (err) => {
       setToastMessage("북마크 업데이트에 실패했습니다.");

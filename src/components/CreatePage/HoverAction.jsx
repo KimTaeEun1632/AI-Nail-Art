@@ -22,7 +22,10 @@ const HoverAction = ({ image }) => {
           <div className="relative group/button">
             <button
               className="p-1 hover:bg-white/10 rounded cursor-pointer"
-              onClick={() => handleBookmark(image.id)}
+              onClick={(event) => {
+                event.stopPropagation();
+                handleBookmark(image.id);
+              }}
             >
               {image?.is_bookmarked ? (
                 <Image
@@ -47,7 +50,10 @@ const HoverAction = ({ image }) => {
           <div className="relative group/button">
             <button
               className="p-1 hover:bg-white/10 rounded cursor-pointer"
-              onClick={() => copyToClipboard(imageUrl)}
+              onClick={(event) => {
+                event.stopPropagation();
+                copyToClipboard(imageUrl);
+              }}
             >
               <Image
                 src={duplicate}
@@ -63,7 +69,10 @@ const HoverAction = ({ image }) => {
           <div className="relative group/button">
             <button
               className="p-1 hover:bg-white/10 rounded cursor-pointer"
-              onClick={() => downloadImage(imageUrl)}
+              onClick={(event) => {
+                event.stopPropagation();
+                downloadImage(imageUrl);
+              }}
             >
               <Image src={down} alt="이미지 다운로드" width={20} height={20} />
             </button>
@@ -74,7 +83,10 @@ const HoverAction = ({ image }) => {
           <div className="relative group/button">
             <button
               className="p-1 hover:bg-white/10 rounded cursor-pointer"
-              onClick={() => deleteImage(image.id)}
+              onClick={(event) => {
+                event.stopPropagation();
+                deleteImage(image.id);
+              }}
             >
               <Image
                 src={deleteButton}
