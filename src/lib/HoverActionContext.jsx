@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useCallback } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { image } from "@/apis/image/generate";
+import { useImages } from "./ImagesContext";
 
 const HoverActionContext = createContext();
 
@@ -8,7 +9,7 @@ export const HoverActionProvider = ({ children }) => {
   const queryClient = useQueryClient();
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
-
+  const { setImages } = useImages();
   //북마크 토글
   const bookmarkMutation = useMutation({
     mutationFn: (imageId) => image.postBookmark(imageId),
@@ -45,26 +46,43 @@ export const HoverActionProvider = ({ children }) => {
           img.id === imageId ? { ...img, is_bookmarked: !isBookmarked } : img
         );
         queryClient.setQueryData(["generatedImages"], updatedGenerated);
+        setImages(updatedGenerated);
       }
 
       return { previousData, previousGenerated };
     },
-    onError: (err) => {
+    onError: (context) => {
+      if (context.previousLibrary) {
+        queryClient.setQueryData(["myLibrary"], context.previousLibrary);
+      }
+      if (context.previousGenerated) {
+        queryClient.setQueryData(
+          ["generatedImages"],
+          context.previousGenerated
+        );
+        setImages(context.previousGenerated);
+      }
       setToastMessage("북마크 업데이트에 실패했습니다.");
       setShowToast(true);
     },
     onSettled: () => {
       queryClient.invalidateQueries(["myLibrary"]);
+      queryClient.invalidateQueries(["generatedImages"]);
     },
   });
 
   // 클립보드 복사
   const copyMutation = useMutation({
     mutationFn: async (imageUrl) => {
-      const base64Response = await image.getImageBase64(imageUrl);
-      const base64Url = base64Response.base64;
-      const response = await fetch(base64Url);
-      return response;
+      if (imageUrl.includes("base64")) {
+        const response = await fetch(imageUrl);
+        return response;
+      } else {
+        const base64Response = await image.getImageBase64(imageUrl);
+        const base64Url = base64Response.base64;
+        const response = await fetch(base64Url);
+        return response;
+      }
     },
     onSuccess: async (response) => {
       const contentType = response.headers.get("Content-Type") || "image/png";
@@ -92,10 +110,15 @@ export const HoverActionProvider = ({ children }) => {
   //이미지 다운로드
   const downloadMutation = useMutation({
     mutationFn: async (imageUrl) => {
-      const base64Response = await image.getImageBase64(imageUrl);
-      const base64Url = base64Response.base64;
-      const response = await fetch(base64Url);
-      return response;
+      if (imageUrl.includes("base64")) {
+        const response = await fetch(imageUrl);
+        return response;
+      } else {
+        const base64Response = await image.getImageBase64(imageUrl);
+        const base64Url = base64Response.base64;
+        const response = await fetch(base64Url);
+        return response;
+      }
     },
     onSuccess: async (response) => {
       const blob = await response.blob();

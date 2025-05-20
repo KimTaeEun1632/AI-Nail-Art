@@ -1,7 +1,9 @@
 import { image } from "@/apis/image/generate";
 import LiveBackground from "@/components/Common/LiveBackground";
+import Toast from "@/components/Common/Toast";
 import PromptInput from "@/components/CreatePage/PromptInput";
 import ShowImageBox from "@/components/CreatePage/ShowImageBox";
+import { useHoverAction } from "@/lib/HoverActionContext";
 import { useImages } from "@/lib/ImagesContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -9,6 +11,7 @@ import React from "react";
 
 const CreatePage = () => {
   const { setImages, setError } = useImages();
+  const { showToast, toastMessage, setShowToast } = useHoverAction();
   const queryClient = useQueryClient();
 
   const generateMutation = useMutation({
@@ -16,9 +19,9 @@ const CreatePage = () => {
     onSuccess: (data) => {
       const generatedImages = data.images.map((img) => ({
         id: img.id,
-        src: `data:image/png;base64,${img.base64}`,
+        file_path: `data:image/png;base64,${img.base64}`,
         alt: `Generated nail art image ${img.id}`,
-        is_bookmarked: img.is_bookmarked,
+        is_bookmarked: img.is_bookmarked || false,
       }));
       setImages(generatedImages);
       queryClient.setQueryData(["generatedImages"], generatedImages);
@@ -31,13 +34,18 @@ const CreatePage = () => {
   const loading = generateMutation.isPending;
 
   return (
-    <div className="relative flex min-h-screen w-full items-center justify-center bg-black text-white">
-      <div className="flex w-full h-full flex-col justify-between items-center gap-5 py-6 mt-20">
-        {loading && <LiveBackground />}
-        <ShowImageBox />
-        <PromptInput generateMutation={generateMutation} loading={loading} />
+    <>
+      <div className="relative flex min-h-screen w-full items-center justify-center bg-black text-white">
+        <div className="flex w-full h-full flex-col justify-between items-center gap-5 py-6 mt-20">
+          {loading && <LiveBackground />}
+          <ShowImageBox />
+          <PromptInput generateMutation={generateMutation} loading={loading} />
+        </div>
       </div>
-    </div>
+      {showToast && (
+        <Toast onShow={() => setShowToast(false)}>{toastMessage}</Toast>
+      )}
+    </>
   );
 };
 

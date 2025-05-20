@@ -1,4 +1,5 @@
 // lib/ImagesContext.jsx
+import { useQueryClient } from "@tanstack/react-query";
 import { createContext, useContext, useState } from "react";
 
 const ImagesContext = createContext();
@@ -9,6 +10,15 @@ export const ImagesProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const queryClient = useQueryClient();
+
+  console.log("이미지 프로바이더", images);
+
+  const updateImages = (newImages) => {
+    setImages(newImages);
+    queryClient.setQueryData(["generatedImages"], newImages);
+  };
+
   return (
     <ImagesContext.Provider
       value={{
@@ -16,7 +26,7 @@ export const ImagesProvider = ({ children }) => {
         loading,
         error,
         isCarousel,
-        setImages,
+        setImages: updateImages,
         setLoading,
         setError,
         setIsCarousel,
