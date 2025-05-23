@@ -10,12 +10,15 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 
 const CreatePage = () => {
-  const { setImages, setError } = useImages();
+  const { setImages, setError, setLoading } = useImages();
   const { showToast, toastMessage, setShowToast } = useHoverAction();
   const queryClient = useQueryClient();
 
   const generateMutation = useMutation({
     mutationFn: (prompt) => image.generateImages(prompt),
+    onMutate: () => {
+      setLoading(true);
+    },
     onSuccess: (data) => {
       const generatedImages = data.images.map((img) => ({
         id: img.id,
@@ -28,6 +31,9 @@ const CreatePage = () => {
     },
     onError: (err) => {
       setError(err.message);
+    },
+    onSettled: () => {
+      setLoading(false);
     },
   });
 

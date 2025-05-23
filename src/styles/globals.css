@@ -24,6 +24,15 @@
       opacity: 0;
     }
   }
+
+  @keyframes shimmer {
+    0% {
+      background-position: 200%;
+    }
+    100% {
+      background-position: -200%;
+    }
+  }
 }
 
 @theme {
@@ -37,6 +46,10 @@
   --animate-animate8: animate 16s linear infinite;
   --animate-animate9: animate 9s linear infinite;
   --animate-animate10: animate 5s linear infinite;
+  --animate-shimmer: shimmer 4s linear infinite;
+
+  --color-custom: #2d2d2d;
+  --color-custom2: #edeef1;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -73,4 +86,13 @@ body {
 
 .swiper-pagination.relative.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal {
   @apply -bottom-1.5;
+}
+
+@utility skeleton-color-* {
+  background-color: --value(--color- *);
+  opacity: --modifier(number);
+}
+
+@utility skeleton {
+  @apply animate-shimmer bg-linear-to-r from-custom via-custom2/20 to-custom/0 bg-size-[300%_100%];
 }
