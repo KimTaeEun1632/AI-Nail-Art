@@ -7,7 +7,7 @@ const ImageBox = ({ item, onClick, isEmpty, className }) => {
   const { loading } = useImages();
   return (
     <div
-      className={`relative aspect-[5/3] rounded-3xl bg-[#2D2D2D] flex items-center justify-center cursor-pointer text-white transition-transform transform hover:border-[0.2rem] hover:border-[#6d6aff] group ${
+      className={`relative aspect-[5/3] rounded-3xl bg-[#2D2D2D] flex items-center justify-center cursor-pointer text-white transition-transform transform hover:border-[0.2rem] hover:border-[#6d6aff] group ${className} ${
         loading && "skeleton"
       }`}
       onClick={onClick}
