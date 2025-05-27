@@ -7,11 +7,12 @@ import { useRouter } from "next/router";
 
 export default function Home() {
   const { data: session, status } = useSession();
+  console.log(session);
   const router = useRouter();
   return (
     <>
       {status === "authenticated" ? (
-        router.push("/test")
+        router.push("/create-image")
       ) : (
         <>
           <div className="min-h-screen w-full flex flex-col items-center justify-center pt-20 pb-20 bg-black">

@@ -1,10 +1,10 @@
+// app/api/auth/[...nextauth]/auth.js
 import { auth } from "@/apis/auth/auth";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 
 export const authOptions = {
-  // Configure one or more authentication providers
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -12,37 +12,47 @@ export const authOptions = {
     }),
     CredentialsProvider({
       name: "Credentials",
-      type: "credentials",
       credentials: {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
         try {
-          const response = await auth.signIn({
-            email: credentials.email,
-            password: credentials.password,
-          });
-          const { user, accessToken, refreshToken } = response;
-          if (accessToken) {
+          // 토큰 기반 인증
+          if (credentials.accessToken && credentials.refreshToken) {
             return {
-              accessToken,
-              refreshToken,
-              email: user.email,
-              id: user.id,
-              nickname: user.nickname,
+              id: credentials.id,
+              email: credentials.email,
+              nickname: credentials.nickname,
+              accessToken: credentials.accessToken,
+              refreshToken: credentials.refreshToken,
             };
           }
-          return null;
+          // 이메일/비밀번호 인증
+          if (!credentials.email || !credentials.password) {
+            throw new Error("Email and password are required");
+          }
+          const reqBody = {
+            email: credentials.email,
+            password: credentials.password,
+          };
+          const user = await auth.signIn(reqBody);
+          return {
+            id: user.user.id,
+            email: user.user.email,
+            nickname: user.user.nickname,
+            accessToken: user.accessToken,
+            refreshToken: user.refreshToken,
+          };
         } catch (error) {
-          console.error("Login failed", error);
+          console.error("Authorize failed:", error);
           return null;
         }
       },
     }),
   ],
 
-  callback: {
+  callbacks: {
     async signIn({ credentials }) {
       if (credentials) {
         return true;
@@ -52,25 +62,22 @@ export const authOptions = {
     },
     async jwt({ token, user }) {
       if (user) {
+        token.id = user.id;
+        token.email = user.email;
+        token.nickname = user.nickname;
         token.accessToken = user.accessToken;
         token.refreshToken = user.refreshToken;
-        token.email = user.email;
-        token.id = user.id;
-        token.nickname = user.nickname;
       }
       return token;
     },
     async session({ session, token }) {
-      if (!session.user) {
-        session.user = {};
-      }
-      if (token) {
-        session.accessToken = token.accessToken;
-        session.refreshToken = token.refreshToken;
-        session.user.email = token.email;
-        session.user.id = token.id;
-        session.user.nickname = token.nickname;
-      }
+      session.user = {
+        id: token.id,
+        email: token.email,
+        nickname: token.nickname,
+        accessToken: token.accessToken,
+        refreshToken: token.refreshToken,
+      };
       return session;
     },
   },

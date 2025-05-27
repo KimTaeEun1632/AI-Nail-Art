@@ -1,49 +1,20 @@
 import { useState } from "react";
 import { useImages } from "@/lib/ImagesContext";
 import Toggle from "../Common/Toggle";
+import { useSession } from "next-auth/react";
 
-const PromptInput = () => {
-  const {
-    loading,
-    error,
-    isCarousel,
-    setIsCarousel,
-    setImages,
-    setLoading,
-    setError,
-  } = useImages();
+const PromptInput = ({ generateMutation, loading }) => {
+  const { error, setError } = useImages();
   const [prompt, setPrompt] = useState("");
+  const { data: session } = useSession();
+  console.log("세선", session);
 
-  const generateImage = async () => {
+  const handleGenerateImage = () => {
     if (!prompt.trim()) {
       setError("프롬프트를 입력해주세요.");
       return;
     }
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(
-        `${
-          process.env.NEXT_PUBLIC_API_BASE_URL
-        }/generate?prompt=${encodeURIComponent(
-          prompt + " nail art"
-        )}&num_images=4`
-      );
-      if (!response.ok) throw new Error("이미지 생성에 실패했습니다.");
-      const data = await response.json();
-      const generatedImages = data.images.map((img) => ({
-        id: img.id,
-        src: `data:image/png;base64,${img.base64}`,
-        alt: `Generated nail art image ${img.id}`,
-      }));
-      setImages(generatedImages);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+    generateMutation.mutate(prompt);
   };
 
   return (
@@ -60,7 +31,7 @@ const PromptInput = () => {
       </div>
       <button
         disabled={loading}
-        onClick={generateImage}
+        onClick={handleGenerateImage}
         className="absolute bottom-3 right-3 rounded-full bg-[#6d6aff] px-4 py-2 text-white hover:bg-[#5a5ae8] disabled:opacity-50"
       >
         {loading ? "생성 중..." : "✨ 만들기"}

@@ -56,7 +56,7 @@ const signin = () => {
     if (res?.error) {
       alert("로그인에 실패했습니다.");
     } else {
-      router.push("/test");
+      router.push("/create-image");
     }
   };
   return (

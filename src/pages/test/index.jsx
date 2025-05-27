@@ -1,21 +1,12 @@
-import LiveBackground from "@/components/Common/LiveBackground";
-import PromptInput from "@/components/CreatePage/PromptInput";
-import ShowImageBox from "@/components/CreatePage/ShowImageBox";
-import { useImages } from "@/lib/ImagesContext";
-
+import MyLibrarySkeleton from "@/components/MyLibraryPage/MyLibrarySkeleton";
 import React from "react";
 
-const CreatePage = () => {
-  const { loading } = useImages();
+const index = () => {
   return (
-    <div className="relative flex min-h-screen w-full items-center justify-center bg-black text-white">
-      <div className="flex w-full h-full flex-col justify-between items-center gap-6 p-6">
-        {loading && <LiveBackground />}
-        <ShowImageBox />
-        <PromptInput />
-      </div>
+    <div className="flex flex-col items-center min-h-screen bg-black text-white py-24 px-4">
+      <MyLibrarySkeleton />
     </div>
   );
 };
 
-export default CreatePage;
+export default index;
