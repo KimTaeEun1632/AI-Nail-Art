@@ -45,7 +45,7 @@ const Nav = () => {
               <Link href="/api/auth/signout">로그아웃</Link>
             </div>
           ) : (
-            <Link href="/auth/signin">로그인</Link>
+            <Link href="/auth/login">로그인</Link>
           )}
         </div>
       </header>

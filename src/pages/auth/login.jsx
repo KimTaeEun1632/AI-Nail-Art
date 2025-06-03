@@ -35,7 +35,7 @@ const rules = {
   },
 };
 
-const signin = () => {
+const login = () => {
   const { formState, register, handleSubmit } = useForm({
     defaultValues: { email: "", password: "" },
     mode: "onBlur",
@@ -109,8 +109,8 @@ const signin = () => {
   );
 };
 
-export default signin;
+export default login;
 
-signin.getLayout = function getLayout(page) {
+login.getLayout = function getLayout(page) {
   return <EmptyLayout>{page}</EmptyLayout>;
 };

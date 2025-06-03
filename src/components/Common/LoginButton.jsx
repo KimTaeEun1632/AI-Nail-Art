@@ -8,7 +8,7 @@ const GoogleLoinButton = ({ ...props }) => {
         {...props}
         onClick={() =>
           signIn("google", {
-            callbackUrl: "http://localhost:3000/test",
+            callbackUrl: "http://localhost:3000/create-image",
           })
         }
       >

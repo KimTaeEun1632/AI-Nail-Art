@@ -9,4 +9,8 @@ export const auth = {
     const response = await requestor.post("/signup", userData);
     return response.data;
   },
+  googleSignin: async (provider) => {
+    const response = await requestor.post(`/api/auth/signin/${provider}`);
+    return response.data;
+  },
 };
