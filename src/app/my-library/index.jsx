@@ -1,3 +1,4 @@
+"use client";
 import { useMemo } from "react";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";

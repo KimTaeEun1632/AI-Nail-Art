@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import GoogleLoinButton from "@/components/Common/LoginButton";
 import { USER_INPUT_VALIDATION } from "@/constants/user";
@@ -5,8 +6,10 @@ import { useForm } from "react-hook-form";
 import EmptyLayout from "@/components/Layout/EmptyLayout";
 import SignInput from "@/components/Common/SignInput";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/router";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { signInWithCredentials } from "@/action";
 
 const { email, password } = USER_INPUT_VALIDATION;
 
@@ -47,11 +50,7 @@ const login = () => {
 
   const onSubmit = async (data) => {
     const { email, password } = data;
-    const res = await signIn("credentials", {
-      redirect: false,
-      email: email,
-      password: password,
-    });
+    const res = await signInWithCredentials(data);
 
     if (res?.error) {
       alert("로그인에 실패했습니다.");
@@ -97,7 +96,7 @@ const login = () => {
         </div>
         <div className="flex gap-2">
           <span>회원이 아닌신가요?</span>
-          <Link href="/auth/signup" className="underline text-blue-600">
+          <Link href="/signup" className="underline text-blue-600">
             회원가입
           </Link>
         </div>

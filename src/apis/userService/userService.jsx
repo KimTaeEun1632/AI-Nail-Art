@@ -1,6 +1,6 @@
 import requestor from "../apis";
 
-export const auth = {
+export const userService = {
   signIn: async (req) => {
     const response = await requestor.post("/login", req);
     return response.data;
@@ -9,8 +9,9 @@ export const auth = {
     const response = await requestor.post("/signup", userData);
     return response.data;
   },
-  googleSignin: async (provider) => {
-    const response = await requestor.post(`/api/auth/signin/${provider}`);
+  googleSignin: async () => {
+    const response = await requestor.post(`/auth/google-login`);
+    console.log(response.data);
     return response.data;
   },
 };

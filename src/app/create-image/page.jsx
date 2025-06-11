@@ -1,18 +1,20 @@
+"use client";
 import { image } from "@/apis/image/generate";
 import LiveBackground from "@/components/Common/LiveBackground";
 import Toast from "@/components/Common/Toast";
 import PromptInput from "@/components/CreatePage/PromptInput";
 import ShowImageBox from "@/components/CreatePage/ShowImageBox";
-import { useHoverAction } from "@/lib/HoverActionContext";
-import { useImages } from "@/lib/ImagesContext";
+import { useHoverAction } from "@/providers/HoverActionProvider";
+import { useImages } from "@/providers/ImagesProvider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
-import React from "react";
+import { useSession } from "next-auth/react";
 
 const CreatePage = () => {
   const { setImages, setError, setLoading } = useImages();
   const { showToast, toastMessage, setShowToast } = useHoverAction();
   const queryClient = useQueryClient();
+  const { session } = useSession();
+  console.log("나옴", session);
 
   const generateMutation = useMutation({
     mutationFn: (prompt) => image.generateImages(prompt),

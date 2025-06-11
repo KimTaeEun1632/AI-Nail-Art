@@ -1,5 +1,6 @@
 import axios from "axios";
-import { getSession, signIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
+import { auth } from "@/auth";
 
 const axiosRequestConfig = {
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -30,7 +31,7 @@ const updateSession = async (data) => {
 
 requestor.interceptors.request.use(
   async (config) => {
-    const session = await getSession();
+    const session = await auth();
     if (session?.user?.accessToken) {
       config.headers.Authorization = `Bearer ${session.user.accessToken}`;
     }
@@ -45,7 +46,7 @@ requestor.interceptors.response.use(
     const { config, response } = error;
     if (response?.status === 401) {
       const originalRequest = config;
-      const session = await getSession();
+      const session = await auth();
 
       if (!session?.user?.refreshToken) {
         window.location.replace("/auth/signin");

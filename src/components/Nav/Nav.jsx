@@ -1,3 +1,4 @@
+"use client";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
@@ -5,10 +6,11 @@ import React, { useState } from "react";
 import arrow from "@/assets/images/arrow.svg";
 import SideBar from "../Common/SideBar";
 import { useSession } from "next-auth/react";
+import { signOutWithForm } from "@/action";
 
 const Nav = () => {
   const [isOpenSideBar, setIsOpenSideBar] = useState(false);
-  const { status, data: session } = useSession();
+  const { session } = useSession();
 
   const handOpenSideBar = (event) => {
     event.preventDefault();
@@ -39,13 +41,12 @@ const Nav = () => {
               />
             </button>
           </div>
-          {status === "authenticated" ? (
+          {session?.user ? (
             <div>
-              <span>{session.user.name}</span>{" "}
-              <Link href="/api/auth/signout">로그아웃</Link>
+              <span>{session.user.name}</span>
             </div>
           ) : (
-            <Link href="/auth/login">로그인</Link>
+            <Link href="/login">로그인</Link>
           )}
         </div>
       </header>

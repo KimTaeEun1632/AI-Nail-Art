@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import HoverAction from "./HoverAction";
-import { useImages } from "@/lib/ImagesContext";
+import { useImages } from "@/providers/ImagesProvider";
 
 const ImageBox = ({ item, onClick, isEmpty, className }) => {
   const { loading } = useImages();
