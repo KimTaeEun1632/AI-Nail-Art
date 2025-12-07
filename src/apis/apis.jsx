@@ -48,7 +48,7 @@ requestor.interceptors.response.use(
       const session = await getSession();
 
       if (!session?.user?.refreshToken) {
-        window.location.replace("/auth/signin");
+        window.location.replace("/login");
         return Promise.reject(new Error("세션이 없거나, 리프레쉬 토큰 만료"));
       }
 
@@ -62,6 +62,7 @@ requestor.interceptors.response.use(
           accessToken: data.accessToken,
           refreshToken: data.refreshToken,
           user: data.user,
+          expires: data.expires,
         });
 
         originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;

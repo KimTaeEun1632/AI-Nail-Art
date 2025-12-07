@@ -1,4 +1,4 @@
-// lib/ImagesContext.jsx
+"use client";
 import { useQueryClient } from "@tanstack/react-query";
 import { createContext, useContext, useState } from "react";
 

@@ -1,6 +1,5 @@
-import { useImages } from "@/lib/ImagesContext";
+import { useImages } from "@/providers/ImagesProvider";
 import { motion } from "framer-motion";
-import React from "react";
 
 const Toggle = () => {
   const { isCarousel, setIsCarousel } = useImages();

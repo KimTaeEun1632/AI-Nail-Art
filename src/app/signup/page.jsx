@@ -1,11 +1,12 @@
-import { auth } from "@/apis/auth/auth";
+"use client";
+import { userService } from "@/apis/userService/userService";
 import GoogleLoinButton from "@/components/Common/LoginButton";
 import SignInput from "@/components/Common/SignInput";
 import EmptyLayout from "@/components/Layout/EmptyLayout";
 import { USER_INPUT_VALIDATION } from "@/constants/user";
 import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 
@@ -50,7 +51,7 @@ const signup = () => {
   const router = useRouter();
 
   const signMutation = useMutation({
-    mutationFn: (data) => auth.signUp(data),
+    mutationFn: (data) => userService.signUp(data),
     mutationKey: ["signUp"],
     onSuccess: () => {
       router.push("/auth/signin");
@@ -130,7 +131,7 @@ const signup = () => {
         </div>
         <div className="flex gap-2">
           <span>이미 가압하셨나요?</span>
-          <Link href="/auth/signin" className="underline text-blue-600">
+          <Link href="/auth/login" className="underline text-blue-600">
             로그인
           </Link>
         </div>

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useImages } from "@/lib/ImagesContext";
 import { ImageGrid } from "./ImageGrid";
 import EmptyImage from "./EmptyImage";
 import img1 from "@/assets/images/test1.jpg";
@@ -7,6 +6,7 @@ import img2 from "@/assets/images/test2.jpg";
 import img3 from "@/assets/images/test3.jpg";
 import img4 from "@/assets/images/test4.jpg";
 import SwiperCarousel from "./SwiperCarousel";
+import { useImages } from "@/providers/ImagesProvider";
 
 // const images = [
 //   { src: img1, alt: "img1" },

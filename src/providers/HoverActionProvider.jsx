@@ -1,7 +1,8 @@
+"use client";
 import { createContext, useContext, useState, useCallback } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { image } from "@/apis/image/generate";
-import { useImages } from "./ImagesContext";
+import { useImages } from "./ImagesProvider";
 
 const HoverActionContext = createContext();
 

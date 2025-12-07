@@ -5,7 +5,7 @@ import { EffectCoverflow, Pagination } from "swiper/modules";
 import "swiper/css"; // Swiper 기본 스타일
 import "swiper/css/navigation"; // 네비게이션 스타일
 import "swiper/css/pagination"; // 페이지네이션 스타일
-import { useImages } from "@/lib/ImagesContext";
+import { useImages } from "@/providers/ImagesProvider";
 
 const EmptyImage = () => {
   const { isCarousel, setIsCarousel } = useImages();

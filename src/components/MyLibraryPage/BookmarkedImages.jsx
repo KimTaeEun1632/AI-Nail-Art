@@ -1,5 +1,4 @@
 import React from "react";
-import HoverAction from "../CreatePage/HoverAction";
 import MyLibraryImageSection from "./MyLibraryImageSection";
 const BookmarkedImages = ({ images }) => {
   return (

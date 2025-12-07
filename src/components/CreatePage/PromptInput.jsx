@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { useImages } from "@/lib/ImagesContext";
 import Toggle from "../Common/Toggle";
 import { useSession } from "next-auth/react";
+import { useImages } from "@/providers/ImagesProvider";
 
 const PromptInput = ({ generateMutation, loading }) => {
   const { error, setError } = useImages();
   const [prompt, setPrompt] = useState("");
-  const { data: session } = useSession();
+  const { session } = useSession();
   console.log("세선", session);
 
   const handleGenerateImage = () => {

@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+"use client";
+import React from "react";
 import bookmark from "@/assets/images/bookmark.svg";
 import bookmarked from "@/assets/images/bookmarked.svg";
 import down from "@/assets/images/down.svg";
 import duplicate from "@/assets/images/duplicate.svg";
 import deleteButton from "@/assets/images/delete.svg";
 import Image from "next/image";
-import { useHoverAction } from "@/lib/HoverActionContext";
+import { useHoverAction } from "@/providers/HoverActionProvider";
 
 const HoverAction = ({ image }) => {
   const { handleBookmark, copyToClipboard, downloadImage, deleteImage } =

@@ -2,17 +2,17 @@ import LiveBackground from "@/components/Common/LiveBackground";
 import Image from "next/image";
 import nailArtImg from "@/assets/images/nailArt.jpg";
 import GoogleLoinButton from "@/components/Common/LoginButton";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
-export default function Home() {
-  const { data: session, status } = useSession();
-  console.log(session);
-  const router = useRouter();
+export default async function Home() {
+  const session = await auth();
+  console.log("홈 세션", session);
+
   return (
     <>
-      {status === "authenticated" ? (
-        router.push("/create-image")
+      {session?.user ? (
+        redirect("/create-image")
       ) : (
         <>
           <div className="min-h-screen w-full flex flex-col items-center justify-center pt-20 pb-20 bg-black">
