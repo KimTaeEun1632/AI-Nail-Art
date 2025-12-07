@@ -41,7 +41,7 @@ const rules = {
 const login = () => {
   const { formState, register, handleSubmit } = useForm({
     defaultValues: { email: "", password: "" },
-    mode: "onBlur",
+    mode: "onChange",
   });
 
   const router = useRouter();

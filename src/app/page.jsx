@@ -3,6 +3,7 @@ import Image from "next/image";
 import nailArtImg from "@/assets/images/nailArt.jpg";
 import GoogleLoinButton from "@/components/Common/LoginButton";
 import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
   const session = await auth();
@@ -11,9 +12,7 @@ export default async function Home() {
   return (
     <>
       {session?.user ? (
-        <div>
-          <p>나옴?</p>
-        </div>
+        redirect("/create-image")
       ) : (
         <>
           <div className="min-h-screen w-full flex flex-col items-center justify-center pt-20 pb-20 bg-black">

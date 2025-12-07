@@ -1,6 +1,5 @@
 import axios from "axios";
-import { signIn } from "next-auth/react";
-import { auth } from "@/auth";
+import { getSession, signIn } from "next-auth/react";
 
 const axiosRequestConfig = {
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -31,7 +30,7 @@ const updateSession = async (data) => {
 
 requestor.interceptors.request.use(
   async (config) => {
-    const session = await auth();
+    const session = await getSession();
     if (session?.user?.accessToken) {
       config.headers.Authorization = `Bearer ${session.user.accessToken}`;
     }
@@ -46,10 +45,10 @@ requestor.interceptors.response.use(
     const { config, response } = error;
     if (response?.status === 401) {
       const originalRequest = config;
-      const session = await auth();
+      const session = await getSession();
 
       if (!session?.user?.refreshToken) {
-        window.location.replace("/auth/signin");
+        window.location.replace("/login");
         return Promise.reject(new Error("세션이 없거나, 리프레쉬 토큰 만료"));
       }
 
@@ -63,6 +62,7 @@ requestor.interceptors.response.use(
           accessToken: data.accessToken,
           refreshToken: data.refreshToken,
           user: data.user,
+          expires: data.expires,
         });
 
         originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;

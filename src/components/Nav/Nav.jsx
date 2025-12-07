@@ -5,12 +5,12 @@ import Image from "next/image";
 import React, { useState } from "react";
 import arrow from "@/assets/images/arrow.svg";
 import SideBar from "../Common/SideBar";
-import { useSession } from "next-auth/react";
-import { signOutWithForm } from "@/action";
+import { signOut, useSession } from "next-auth/react";
 
 const Nav = () => {
   const [isOpenSideBar, setIsOpenSideBar] = useState(false);
-  const { session } = useSession();
+  const { data: session } = useSession();
+  console.log("nav 세션", session);
 
   const handOpenSideBar = (event) => {
     event.preventDefault();
@@ -44,6 +44,9 @@ const Nav = () => {
           {session?.user ? (
             <div>
               <span>{session.user.name}</span>
+              <button onClick={() => signOut({ redirectTo: "/" })}>
+                로그아웃
+              </button>
             </div>
           ) : (
             <Link href="/login">로그인</Link>

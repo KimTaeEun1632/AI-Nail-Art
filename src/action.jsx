@@ -1,5 +1,3 @@
-// src/action.jsx
-
 "use server";
 import { auth, signIn, signOut, update } from "@/auth";
 

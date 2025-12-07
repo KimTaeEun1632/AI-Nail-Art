@@ -1,31 +1,7 @@
-// src/auth.jsx
-
 import { userService } from "@/apis/userService/userService";
-import axios from "axios";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
-
-// // refreshAccessToken 함수 정의
-// async function refreshAccessToken(token) {
-//   try {
-//     const { data } = await axios.post(
-//       `${process.env.NEXT_PUBLIC_API_BASE_URL}/refresh`,
-//       { refresh_token: session.user.refreshToken }
-//     );
-
-//     await updateSession({
-//       accessToken: data.accessToken,
-//       refreshToken: data.refreshToken,
-//       user: data.user,
-//     });
-
-//     originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
-//     return axios(originalRequest);
-//   } catch (e) {
-//     console.error("리프레쉬 토큰 에러:", e);
-//   }
-// }
 
 export const { signIn, signOut, auth, handlers, update } = NextAuth({
   providers: [
@@ -81,23 +57,82 @@ export const { signIn, signOut, auth, handlers, update } = NextAuth({
   ],
 
   callbacks: {
-    jwt: async ({ token, user }) => {
+    signIn: async ({ account, profile }) => {
+      if (account?.provider === "google") {
+        return !!profile?.email_verified;
+      }
+      return true;
+    },
+    jwt: async ({ token, user, account, profile }) => {
       if (user?.accessToken) {
         token.id = user.id;
         token.email = user.email;
         token.nickname = user.nickname;
         token.accessToken = user.accessToken;
         token.refreshToken = user.refreshToken;
+        token.expiresAt = Math.floor(Date.now() / 1000) + 30 * 60;
+      } else if (account?.provider === "google" && profile?.email) {
+        try {
+          //  백엔드의 social-login 엔드포인트 호출
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-login`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                email: profile.email,
+                nickname: profile.name || profile.given_name,
+                provider_id: profile.sub,
+                provider: "google",
+              }),
+            }
+          );
+
+          if (response.ok) {
+            const data = await response.json(); // 백엔드에서 받은 토큰 정보로 토큰 업데이트
+            token.id = data.user.id;
+            token.email = data.user.email;
+            token.nickname = data.user.nickname;
+            token.accessToken = data.accessToken;
+            token.refreshToken = data.refreshToken;
+            token.expiresAt = Math.floor(Date.now() / 1000) + 30 * 60;
+          } else {
+            // 백엔드 처리 실패 시 로그인 강제 실패 처리
+            console.error("백엔드 소셜 로그인 실패:");
+            return null;
+          }
+        } catch (error) {
+          console.error("소셜 로그인 중 에러 발생:", error);
+          return null;
+        }
+      }
+      if (Date.now() > token.expiresAt * 1000) {
+        try {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/refresh`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ refreshToken: token.refreshToken }),
+            }
+          );
+          const data = await response.json();
+          token.accessToken = data.accessToken;
+          token.refreshToken = data.refreshToken;
+          token.expiresAt = data.expiresAt;
+        } catch (error) {
+          return { ...token, error: "RefreshAccessTokenError" };
+        }
       }
       return token;
     },
     session: async ({ session, token }) => {
       if (token?.accessToken) {
-        session.id = token.id;
-        session.email = token.email;
-        session.nickname = token.nickname;
-        session.accessToken = token.accessToken;
-        session.refreshToken = token.refreshToken;
+        session.user.id = token.id;
+        session.user.email = token.email;
+        session.user.nickname = token.nickname;
+        session.user.accessToken = token.accessToken;
+        session.user.refreshToken = token.refreshToken;
       }
       return session;
     },

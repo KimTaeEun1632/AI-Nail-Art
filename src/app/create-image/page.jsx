@@ -7,14 +7,11 @@ import ShowImageBox from "@/components/CreatePage/ShowImageBox";
 import { useHoverAction } from "@/providers/HoverActionProvider";
 import { useImages } from "@/providers/ImagesProvider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
 
 const CreatePage = () => {
   const { setImages, setError, setLoading } = useImages();
   const { showToast, toastMessage, setShowToast } = useHoverAction();
   const queryClient = useQueryClient();
-  const { session } = useSession();
-  console.log("나옴", session);
 
   const generateMutation = useMutation({
     mutationFn: (prompt) => image.generateImages(prompt),

@@ -14,6 +14,7 @@ export const image = {
   },
   getMyLibrary: async () => {
     const response = await requestor.get("/images/my-library");
+    console.log("응답", response);
     return response.data;
   },
   postBookmark: async (imageId) => {

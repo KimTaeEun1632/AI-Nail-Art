@@ -1,8 +1,9 @@
 import requestor from "../apis";
+import ServerRequestor from "../serverApis";
 
 export const userService = {
   signIn: async (req) => {
-    const response = await requestor.post("/login", req);
+    const response = await ServerRequestor.post("/login", req);
     return response.data;
   },
   signUp: async (userData) => {
@@ -10,7 +11,7 @@ export const userService = {
     return response.data;
   },
   googleSignin: async () => {
-    const response = await requestor.post(`/auth/google-login`);
+    const response = await ServerRequestor.post(`/auth/google-login`);
     console.log(response.data);
     return response.data;
   },
